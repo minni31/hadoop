@@ -1415,10 +1415,15 @@ public class YarnConfiguration extends Configuration {
     NM_PREFIX + "localizer.client.thread-count";
   public static final int DEFAULT_NM_LOCALIZER_CLIENT_THREAD_COUNT = 5;
   
-  /** Number of threads to use for localization fetching.*/
+  /** Number of threads to use for localization fetching for public resources*/
   public static final String NM_LOCALIZER_FETCH_THREAD_COUNT = 
     NM_PREFIX + "localizer.fetch.thread-count";
   public static final int DEFAULT_NM_LOCALIZER_FETCH_THREAD_COUNT = 4;
+
+  /** Number of threads to use for localization fetching for private localizer*/
+  public static final String NM_LOCALIZER_PRIVATE_FETCH_THREAD_COUNT =
+      NM_PREFIX + "localizer-private.fetch.thread-count";
+  public static final int DEFAULT_NM_LOCALIZER_PRIVATE_FETCH_THREAD_COUNT = 4;
 
   /** Where to store container logs.*/
   public static final String NM_LOG_DIRS = NM_PREFIX + "log-dirs";

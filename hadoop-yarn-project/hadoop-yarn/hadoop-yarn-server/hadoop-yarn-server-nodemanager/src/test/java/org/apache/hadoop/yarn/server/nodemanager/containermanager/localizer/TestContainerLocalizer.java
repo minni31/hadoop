@@ -421,7 +421,8 @@ public class TestContainerLocalizer {
             return done;
           }
         });
-    doReturn(syncExec).when(localizer).createDownloadThreadPool();
+    doReturn(syncExec).when(localizer)
+        .createDownloadThreadPool(new YarnConfiguration());
     doReturn(cs).when(localizer).createCompletionService(syncExec);
   }
 

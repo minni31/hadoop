@@ -46,6 +46,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.hadoop.classification.InterfaceAudience.Private;
@@ -197,7 +198,7 @@ public class ContainerLocalizer {
 
     ExecutorService exec = null;
     try {
-      exec = createDownloadThreadPool();
+      exec = createDownloadThreadPool(conf);
       CompletionService<Path> ecs = createCompletionService(exec);
       localizeFiles(nodeManager, ecs, ugi);
     } catch (Throwable e) {
@@ -216,9 +217,13 @@ public class ContainerLocalizer {
     }
   }
 
-  ExecutorService createDownloadThreadPool() {
-    return HadoopExecutors.newSingleThreadExecutor(new ThreadFactoryBuilder()
-      .setNameFormat("ContainerLocalizer Downloader").build());
+  ExecutorService createDownloadThreadPool(Configuration conf) {
+    int nThreads =
+        conf.getInt(YarnConfiguration.NM_LOCALIZER_PRIVATE_FETCH_THREAD_COUNT,
+            YarnConfiguration.DEFAULT_NM_LOCALIZER_PRIVATE_FETCH_THREAD_COUNT);
+    ThreadFactory tf = new ThreadFactoryBuilder()
+        .setNameFormat("ContainerLocalizer Downloader #%d").build();
+    return HadoopExecutors.newFixedThreadPool(nThreads, tf);
   }
 
   CompletionService<Path> createCompletionService(ExecutorService exec) {
